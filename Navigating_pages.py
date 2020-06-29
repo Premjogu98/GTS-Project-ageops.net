@@ -273,7 +273,7 @@ def Scraping_data(tender_link_list):
                     0].strip(
                     '').replace('\\', '').replace('[', '').replace(']', '').strip('"')
                 # print(bidding_document_download)
-                SegField[41] = bidding_document_download
+                SegField[44] = bidding_document_download
 
                 # =============================================================================================================
 
@@ -315,16 +315,17 @@ def Scraping_data(tender_link_list):
                 SegField[17] = '0'
 
                 SegField[7] = "AF"
-                for Segdata in range(len(SegField)):
-                    print(Segdata, end=' ')
-                    print(SegField[Segdata])
+                for SegIndex in range(len(SegField)):
+                    print(SegIndex, end=' ')
+                    print(SegField[SegIndex])
+                    SegField[SegIndex] = html.unescape(str(SegField[SegIndex]))
+                    SegField[SegIndex] = str(SegField[SegIndex]).replace("'", "''")
                 check_date(SegField)
                 Global_var.Total += 1
                 d = False
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
-                print("Error ON : ", sys._getframe().f_code.co_name + "--> " + str(e), "\n", exc_type,
-                      "\n", exc_tb.tb_lineno)
+                print("Error ON : ", sys._getframe().f_code.co_name + "--> " + str(e), "\n", exc_type,"\n", exc_tb.tb_lineno)
                 time.sleep(5)
                 d = True
     import ctypes
