@@ -156,22 +156,18 @@ def Scraping_data(tender_link_list):
                         SegField[19] = description_da.replace('\\/','')
 
                 # =============================================================================================================
-                procurement_entity_en = Tender_Details.partition('"procurement_entity_en":')[2].partition(',"')[
-                    0].strip(
-                    '').strip('"')
+                procurement_entity_en = Tender_Details.partition('"procurement_entity_en":')[2].partition(',"')[0].strip('').strip('"')
                 if procurement_entity_en != "":
                     if '\\u' in procurement_entity_en:
                         procurement_entity_en = procurement_entity_en.encode('utf-8')
                         procurement_entity_en = procurement_entity_en.decode('unicode-escape')
                         # procurement_entity_en = Translate(procurement_entity_en)
-                        SegField[12] = procurement_entity_en.upper().replace('\\','').replace('//',' ')
+                        SegField[12] = procurement_entity_en.upper().replace('\\','').replace('//',' ').strip()
                     else:
                         # procurement_entity_en = Translate(procurement_entity_en)
-                        SegField[12] = procurement_entity_en.upper().replace('\\','').replace('//',' ')
+                        SegField[12] = procurement_entity_en.upper().replace('\\','').replace('//',' ').strip()
                 else:
-                    procurement_entity_da = Tender_Details.partition('"procurement_entity_da":')[2].partition(',"')[
-                        0].strip(
-                        '').strip('"')
+                    procurement_entity_da = Tender_Details.partition('"procurement_entity_da":')[2].partition(',"')[0].strip('').strip('"')
                     # print(procurement_entity_da)
                     if '\\u' in procurement_entity_da:
                         procurement_entity_da = procurement_entity_da.encode('utf-8')
@@ -181,7 +177,27 @@ def Scraping_data(tender_link_list):
                     else:
                         # procurement_entity_da = Translate(procurement_entity_da)
                         SegField[12] = procurement_entity_da.upper().replace('\\','').replace('//',' ').strip()
+                
+                if str(SegField[12]) == "MINISTRY OF AGRICULTURE, IRRIGATION, AND LIVESTOCK":
+                    SegField[1] = "media@mail.gov.af"
+                    SegField[2] = "Karti Sakhi avenue, Jamal Mena, 3 rd District, Kabul, Afghanistan<br>\nPhone: +93 (0) 20 292 2460 / 020 292 2458"
+                
+                elif str(SegField[12]) == "MINISTRY OF PUBLIC HEALTH":
+                    SegField[1] = "info@moph.gov.af"
+                    SegField[2] = "Massoud crossroads, Kabul, Afghanistan<br>\nPhone: +93202301374"
+                
+                elif str(SegField[12]) == "MINISTRY OF URBAN DEVELOPMENT AND LAND":
+                    SegField[1] = "media@ocs.gov.af"
+                
+                elif str(SegField[12]) == "MINISTRY OF COMMUNICATION AND INFORMATION TECHNOLOGY":
+                    SegField[1] = "info@mcit.gov.af"
+                    SegField[2] = "Mohammad Jan Khan Road, Kabul, Afghanistan<br>\nPhone: +93(0) 20 210 7091"
 
+                elif str(SegField[12]) == "MINISTRY OF INTERIOR":
+                    SegField[1] = "info@moi.gov.af"
+                    SegField[2] = "Kabul, Afghanistan<br>\nPhone: +93 (0) 20 220 1758"
+                
+                else:pass
                 # ========================================================================================================
 
                 identification_number = Tender_Details.partition('"identification_number":')[2].partition(',"')[
@@ -320,6 +336,10 @@ def Scraping_data(tender_link_list):
                     print(SegField[SegIndex])
                     SegField[SegIndex] = html.unescape(str(SegField[SegIndex]))
                     SegField[SegIndex] = str(SegField[SegIndex]).replace("'", "''")
+
+                if len(SegField[19]) > 250:
+                    SegField[19] = SegField[19][:247] + '...'
+
                 check_date(SegField)
                 Global_var.Total += 1
                 d = False
