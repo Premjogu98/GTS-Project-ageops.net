@@ -188,6 +188,7 @@ def Scraping_data(tender_link_list):
                 
                 elif str(SegField[12]) == "MINISTRY OF URBAN DEVELOPMENT AND LAND":
                     SegField[1] = "media@ocs.gov.af"
+                    SegField[2] = "7th Police District, Opposite Darulaman Palace, Kabul, Afghanistan"
                 
                 elif str(SegField[12]) == "MINISTRY OF COMMUNICATION AND INFORMATION TECHNOLOGY":
                     SegField[1] = "info@mcit.gov.af"
@@ -196,6 +197,25 @@ def Scraping_data(tender_link_list):
                 elif str(SegField[12]) == "MINISTRY OF INTERIOR":
                     SegField[1] = "info@moi.gov.af"
                     SegField[2] = "Kabul, Afghanistan<br>\nPhone: +93 (0) 20 220 1758"
+
+                elif str(SegField[12]) == "MINISTRY OF RURAL REHABILITATION AND DEVELOPMENT":
+                    SegField[2] = "Kabul, Afghanistan<br>\nPhone: +93 74 950 5253"
+                
+                elif str(SegField[12]) == "ATTORNEY GENERAL":
+                    SegField[1] = "iprd@ago.gov.af"
+                    SegField[2] = "Attorney General's Office, Darulaman, Kabul, Afghanistan<br>\nPhone: +93(0) 202 201 512"
+                
+                elif str(SegField[12]) == "FACILITED BY NATIONAL PROCUREMENT AUTHORITY":
+                    SegField[1] = "info@npa.gov.af"
+                    SegField[2] = "Pashtoonistan Watt, Kabul, Afghanistan<br>\nPhone: +93 (0) 791 04 57 47"
+                
+                elif str(SegField[12]) == "THE AFGHANISTAN BANK":
+                    SegField[1] = "info@dab.gov.af"
+                    SegField[2] = "Kabul, Afghanistan<br>\nPhone: +93(20) 2104146"
+                
+                elif str(SegField[12]) == "THE AFGHANISTAN BANK":
+                    SegField[1] = "Hamid.rahmani@km.gov.af"
+                    SegField[2] = "Kabul Municipality, ten Afghans, Kabul Afghanistan<br>\nPhone: 0792743685"
                 
                 else:pass
                 # ========================================================================================================
