@@ -9,6 +9,7 @@ import urllib.parse
 import re
 import html
 import string
+from insert_on_database import insert_in_Local,create_filename
 
 
 # def Translate(text_without_translate):
@@ -67,14 +68,20 @@ def getsource():
         try:
             for Json_Data in Json_Data1:
                 start_date_en = Json_Data.partition('"start_date_en":')[2].partition(',"')[0].strip('').strip('"')
-                datetime_object = datetime.strptime(start_date_en, "%Y-%m-%d")
-                start_date_en = datetime_object.strftime("%Y-%m-%d")
-                if start_date_en >= Global_var.From_Date:
+                if start_date_en != '':
+                    datetime_object = datetime.strptime(start_date_en, "%Y-%m-%d")
+                    start_date_en = datetime_object.strftime("%Y-%m-%d")
+                    if start_date_en >= Global_var.From_Date:
+                        ID = re.search(r"(?<=id\":).*?(?=,)", Json_Data).group(0).strip()
+                        tender_link = "https://ageops.net/api/bidding-opportunities-details?id=" + str(ID) + "&lang=en"
+                        tender_link_list.append(tender_link)
+                    else:
+                        Scraping_data(tender_link_list)
+                else:
+                    print('start Date NOt Given')
                     ID = re.search(r"(?<=id\":).*?(?=,)", Json_Data).group(0).strip()
                     tender_link = "https://ageops.net/api/bidding-opportunities-details?id=" + str(ID) + "&lang=en"
                     tender_link_list.append(tender_link)
-                else:
-                    Scraping_data(tender_link_list)
             Scraping_data(tender_link_list)
             b = False
         except Exception as e:
@@ -123,6 +130,8 @@ def Scraping_data(tender_link_list):
                         description_en = re.sub(' +', ' ', str(description_en))
                         # description_en = Translate(description_en)
                         description_en = string.capwords(str(description_en))
+                        if 'Contract Title:' in description_en:
+                            description_en = description_en.partition("Contract Title:")[0]
                         SegField[19] = description_en.replace('\\','').replace('//',' ')
 
                     else:
@@ -132,6 +141,8 @@ def Scraping_data(tender_link_list):
                                 '')
                         description_en = re.sub(' +', ' ', str(description_en))
                         description_en = string.capwords(str(description_en))
+                        if 'Contract Title:' in description_en:
+                            description_en = description_en.partition("Contract Title:")[0]
                         SegField[19] = description_en.replace('\\','').replace('//',' ')
                 else:
                     description_da = Tender_Details.partition('description_da":"')[2].partition('","')[0].strip('')
@@ -144,15 +155,18 @@ def Scraping_data(tender_link_list):
                                 '')
                         description_da = re.sub(' +', ' ', str(description_da))
                         description_da = string.capwords(str(description_da))
+                        if 'Contract Title:' in description_en:
+                            description_en = description_en.partition("Contract Title:")[0]
                         SegField[19] = description_da.replace('\\','').replace('//',' ')
                     else:
 
                         # description_da = Translate(description_da)
                         if 'Title:' in description_da:
-                            description_da = Tender_Details.partition('Title:')[2].partition(',')[0].strip(
-                                '')
+                            description_da = Tender_Details.partition('Title:')[2].partition(',')[0].strip('')
                         description_da = re.sub(' +', ' ', str(description_da))
                         description_da = string.capwords(str(description_da))
+                        if 'Contract Title:' in description_en:
+                            description_en = description_en.partition("Contract Title:")[0]
                         SegField[19] = description_da.replace('\\/','')
 
                 # =============================================================================================================
@@ -213,9 +227,21 @@ def Scraping_data(tender_link_list):
                     SegField[1] = "info@dab.gov.af"
                     SegField[2] = "Kabul, Afghanistan<br>\nPhone: +93(20) 2104146"
                 
-                elif str(SegField[12]) == "THE AFGHANISTAN BANK":
+                elif str(SegField[12]) == "KABUL MUNICIPALITY":
                     SegField[1] = "Hamid.rahmani@km.gov.af"
                     SegField[2] = "Kabul Municipality, ten Afghans, Kabul Afghanistan<br>\nPhone: 0792743685"
+                elif str(SegField[12]) == "MINISTRY OF ENERGY AND WATER":
+                    SegField[1] = "spokesman.mew@outlook.com"
+                    SegField[2] = "Darullaman senatoriam, Kabul, Afghanistan<br>\nPhone: +93 (0) 748521521"
+                    SegField[8] = 'https://nwara.gov.af/'
+                elif str(SegField[12]) == "CAPITAL REGION INDEPENDENT DEVELOPMENT AUTHORITY":
+                    SegField[1] = "info@crida.gov.af"
+                    SegField[2] = "Ansari 1st, Kabul, Afghanistan<br>\nPhone: +93 744 44 93 01"
+                    SegField[8] = 'https://www.crida.gov.af/'
+                elif str(SegField[12]) == "INDEPENDENT DIRECTORATE OF LOCAL GOVERNANCE":
+                    SegField[1] = "info@idlg.gov.af"
+                    SegField[2] = "Bibi Mahru, Kabul, Afghanistan<br>\nPhone: +93 20 210 6569"
+                    SegField[8] = 'https://idlg.gov.af/'
                 
                 else:pass
                 # ========================================================================================================
@@ -389,7 +415,6 @@ def check_date(SegField):
                 deadline = time.strptime(tender_date , "%Y-%m-%d")
                 currentdate = time.strptime(date2 , "%Y-%m-%d")
                 if deadline > currentdate:
-                    from insert_on_database import insert_in_Local,create_filename
                     insert_in_Local(SegField)
                     a = 1
                 else:
