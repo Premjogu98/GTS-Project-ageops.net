@@ -58,8 +58,7 @@ def getsource():
         except Exception as e:
             # fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             exc_type, exc_obj, exc_tb = sys.exc_info()
-            print("Error ON : ", sys._getframe().f_code.co_name + "--> " + str(e), "\n", exc_type, "\n",
-                   exc_tb.tb_lineno)
+            print("Error ON : ", sys._getframe().f_code.co_name + "--> " + str(e), "\n", exc_type, "\n",exc_tb.tb_lineno)
             time.sleep(5)
             a = True
     tender_link_list = []
@@ -87,8 +86,7 @@ def getsource():
         except Exception as e:
             # fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             exc_type, exc_obj, exc_tb = sys.exc_info()
-            print("Error ON : ", sys._getframe().f_code.co_name + "--> " + str(e), "\n", exc_type, "\n",
-                   exc_tb.tb_lineno)
+            print("Error ON : ", sys._getframe().f_code.co_name + "--> " + str(e), "\n", exc_type, "\n",exc_tb.tb_lineno)
             time.sleep(5)
             b = True
 
@@ -99,7 +97,7 @@ def Scraping_data(tender_link_list):
         while d == True:
             try:
                 SegField = []
-                for data in range(45):
+                for data in range(49):
                     SegField.append('')
                 Tender_Details = ''
                 c = True
@@ -344,7 +342,7 @@ def Scraping_data(tender_link_list):
                     0].strip(
                     '').replace('\\', '').replace('[', '').replace(']', '').strip('"')
                 # print(amendment_document_download)
-                SegField[42] = amendment_document_download
+                SegField[45] = amendment_document_download
 
                 # =============================================================================================================
 
@@ -352,7 +350,7 @@ def Scraping_data(tender_link_list):
                     0].strip(
                     '').replace('\\', '').replace('[', '').replace(']', '').strip('"')
                 # print(notices_document_download)
-                SegField[43] = notices_document_download
+                SegField[46] = notices_document_download
 
                 SegField[18] = str(SegField[19]) + '<br>\n تاریخ اعلام تدارکات: ' + str(
                     SegField[5]) + '<br>\n آخرین مهلت ارسال پیشنهاد: ' + str(
@@ -368,6 +366,12 @@ def Scraping_data(tender_link_list):
                 SegField[27] = "0"
                 SegField[22] = "0"
                 SegField[26] = "0.0"
+                SegField[7] = "AF"
+                SegField[20] = ""
+                SegField[21] = "" 
+                SegField[42] = SegField[7]
+                SegField[43] = "" 
+
 
                 # =============================================== Notice_type ===================================================
                 SegField[14] = '2'
@@ -376,7 +380,7 @@ def Scraping_data(tender_link_list):
                 # =============================================== MFA ===================================================
                 SegField[17] = '0'
 
-                SegField[7] = "AF"
+                
                 for SegIndex in range(len(SegField)):
                     print(SegIndex, end=' ')
                     print(SegField[SegIndex])
@@ -385,6 +389,8 @@ def Scraping_data(tender_link_list):
 
                 if len(SegField[19]) > 250:
                     SegField[19] = SegField[19][:247] + '...'
+                if len(SegField[18]) > 1500:
+                    SegField[19] = SegField[19][:1495] + '...'
 
                 check_date(SegField)
                 Global_var.Total += 1
